@@ -1,0 +1,30 @@
+name: Actualizador Diario de Presas CONAGUA
+
+on:
+  schedule:
+    # Se ejecuta todos los días a las 06:00 AM y 06:00 PM (hora UTC)
+    - cron: '0 6,18 * * *'
+  workflow_dispatch: # Permite ejecutarlo manualmente cuando quieras
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código del repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar entorno Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Ejecutar script de actualización de presas
+        run: node scripts/actualizarPresas.js
+
+      - name: Guardar cambios en el repositorio si hubo actualización
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Bot"
+          git add presas_sinaloa.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-actualizacion de datos de presas Sinaloa" && git push)
