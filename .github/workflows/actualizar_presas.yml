@@ -4,10 +4,10 @@ on:
   schedule:
     # Se ejecuta todos los días a las 06:00 AM y 06:00 PM (hora UTC)
     - cron: '0 6,18 * * *'
-  workflow_dispatch: # Permite ejecutarlo manualmente cuando quieras
+  workflow_dispatch:
 
 permissions:
-  contents: write # Otorga permisos para hacer git push desde el runner
+  contents: write
 
 jobs:
   build:
@@ -20,12 +20,12 @@ jobs:
       - name: Configurar entorno Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Ejecutar script de actualización de presas
         run: node scripts/actualizarPresas.js
 
-      - name: Guardar cambios en el repositorio si hubo actualización
+      - name: Guardar cambios en el repositorio
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action Bot"
